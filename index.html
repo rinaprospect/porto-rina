@@ -549,9 +549,9 @@
               </div>
 
               <div class="kpr-field">
-                <label>Uang Muka (DP) &nbsp;<span class="kpr-badge" id="dp-val">0%</span></label>
+                <label>Uang Muka (DP) &nbsp;<span class="kpr-badge-wrap"><input type="number" class="kpr-badge-input" id="dp-val" value="0" min="0" max="100" step="1"><span class="kpr-badge-unit">%</span></span></label>
                 <input type="range" id="kpr-dp" class="kpr-slider" min="0" max="90" step="5" value="0">
-                <div class="kpr-range-labels"><span>0%</span><span>90%</span></div>
+                <div class="kpr-range-labels"><span>0%</span><span class="kpr-input-hint"><i class="bi bi-pencil-fill"></i> angka % bisa diketik langsung</span><span>90%</span></div>
               </div>
 
               <div class="kpr-field">
@@ -567,10 +567,19 @@
               </div>
 
               <div class="kpr-field">
-                <label>Suku Bunga / Tahun &nbsp;<span class="kpr-badge" id="bunga-val">8.5%</span></label>
-                <input type="range" id="kpr-bunga" class="kpr-slider" min="5" max="15" step="0.5" value="8.5">
-                <div class="kpr-range-labels"><span>5%</span><span>15%</span></div>
+                <label>Suku Bunga / Tahun &nbsp;<span class="kpr-badge-wrap"><input type="number" class="kpr-badge-input" id="bunga-val" value="0" min="0" max="30" step="0.1"><span class="kpr-badge-unit">%</span></span></label>
+                <input type="range" id="kpr-bunga" class="kpr-slider" min="0" max="20" step="0.5" value="0">
+                <div class="kpr-range-labels"><span>0%</span><span class="kpr-input-hint"><i class="bi bi-pencil-fill"></i> angka % bisa diketik langsung</span><span>20%</span></div>
               </div>
+
+              <div class="kpr-field">
+                <label for="kpr-income">Penghasilan Bulanan <em class="kpr-field-note">(untuk cek kelayakan)</em></label>
+                <div class="kpr-input-group">
+                  <span class="kpr-prefix">Rp</span>
+                  <input type="text" id="kpr-income" class="kpr-input" placeholder="10.000.000" autocomplete="off" inputmode="numeric">
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -582,6 +591,24 @@
                 <span class="kpr-cicilan-lbl">Estimasi Cicilan per Bulan</span>
                 <span class="kpr-cicilan-num" id="res-cicilan">Rp 0</span>
                 <span class="kpr-cicilan-sub" id="res-tenor-info">selama 15 tahun (180&times; angsuran)</span>
+              </div>
+
+              <!-- Penghasilan minimum info -->
+              <div class="kpr-income-info">
+                <i class="bi bi-person-check"></i>
+                <span>Penghasilan min. disarankan: <strong id="kpr-income-min">Rp &mdash;</strong></span>
+              </div>
+
+              <!-- Affordability bar (muncul jika penghasilan diisi) -->
+              <div class="kpr-afford" id="kpr-afford" style="display:none">
+                <div class="kpr-afford-bar-wrap">
+                  <div class="kpr-afford-bar" id="kpr-afford-bar"></div>
+                </div>
+                <div class="kpr-afford-row">
+                  <span class="kpr-afford-pct" id="kpr-afford-pct">0%</span>
+                  <span>dari penghasilan</span>
+                  <span class="kpr-afford-badge" id="kpr-afford-badge">Aman</span>
+                </div>
               </div>
 
               <div class="kpr-detail">
@@ -628,6 +655,8 @@
           </div>
 
         </div>
+
+
       </div>
     </section>
 

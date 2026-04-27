@@ -1514,19 +1514,40 @@ section { padding: 80px 0; overflow: hidden; }
   margin-bottom: 10px;
 }
 
-/* Badge inside label */
-.kpr-badge {
-  display: inline-block;
+/* Badge inside label (manual input version) */
+.kpr-badge-wrap {
+  display: inline-flex;
+  align-items: center;
   background: var(--grad-gold);
-  color: var(--bg-base) !important;
-  -webkit-text-fill-color: var(--bg-base) !important;
-  font-size: 11px;
-  font-weight: 700;
-  font-style: normal;
-  padding: 2px 10px;
   border-radius: 12px;
+  padding: 2px 8px 2px 10px;
   vertical-align: middle;
-  transition: all .25s;
+  gap: 1px;
+  transition: box-shadow .25s;
+}
+.kpr-badge-wrap:focus-within {
+  box-shadow: 0 0 0 3px rgba(201,168,76,.3);
+}
+.kpr-badge-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--bg-base);
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  width: 36px;
+  text-align: right;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.kpr-badge-input::-webkit-inner-spin-button,
+.kpr-badge-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.kpr-badge-unit {
+  color: var(--bg-base);
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Harga Input */
@@ -1611,6 +1632,14 @@ section { padding: 80px 0; overflow: hidden; }
   font-family: "Poppins", sans-serif;
   color: var(--text-3);
   margin-top: 5px;
+}
+.kpr-input-hint {
+  font-size: 10.5px;
+  color: var(--gold);
+  opacity: .7;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 /* Tenor Buttons */
@@ -1780,4 +1809,235 @@ section { padding: 80px 0; overflow: hidden; }
   margin: 0;
   line-height: 1.6;
   text-align: center;
+}
+
+/* Field note (label kecil) */
+.kpr-field-note {
+  font-size: 10.5px;
+  color: var(--text-3);
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+/* PPN Toggle */
+.kpr-field-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.kpr-field-toggle > label:first-child { margin-bottom: 0; }
+.kpr-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px; height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.kpr-toggle input { opacity: 0; width: 0; height: 0; }
+.kpr-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid var(--border);
+  transition: all .25s var(--ease);
+}
+.kpr-toggle-track::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 50%;
+  transform: translateY(-50%);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--text-3);
+  transition: all .25s var(--ease);
+}
+.kpr-toggle input:checked + .kpr-toggle-track {
+  background: rgba(201,168,76,.25);
+  border-color: var(--gold);
+}
+.kpr-toggle input:checked + .kpr-toggle-track::after {
+  left: calc(100% - 19px);
+  background: var(--gold);
+}
+
+/* Min income info row */
+.kpr-income-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: rgba(201,168,76,.05);
+  border: 1px solid rgba(201,168,76,.12);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-2);
+}
+.kpr-income-info i { color: var(--gold); font-size: 15px; flex-shrink: 0; }
+.kpr-income-info strong { color: var(--gold); }
+
+/* Affordability bar */
+.kpr-afford {
+  padding: 12px 14px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+.kpr-afford-bar-wrap {
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255,255,255,.07);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.kpr-afford-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--grad-gold);
+  width: 0;
+  transition: width .6s var(--ease), background .35s;
+}
+.kpr-afford-bar.warn { background: linear-gradient(90deg, #e0a030, #e8c040); }
+.kpr-afford-bar.over { background: linear-gradient(90deg, #e05030, #e84040); }
+.kpr-afford-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-3);
+}
+.kpr-afford-pct {
+  font-weight: 700;
+  color: var(--text-1);
+  font-size: 13px;
+}
+.kpr-afford-badge {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 10px;
+  background: rgba(37,211,102,.12);
+  color: #25d366;
+  border: 1px solid rgba(37,211,102,.2);
+}
+.kpr-afford-badge.warn { background: rgba(224,160,48,.12); color: #e0a030; border-color: rgba(224,160,48,.2); }
+.kpr-afford-badge.over { background: rgba(224,64,48,.12); color: #e04030; border-color: rgba(224,64,48,.2); }
+
+/* Biaya Tambahan section */
+.kpr-biaya {
+  margin-top: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color .25s;
+}
+.kpr-biaya:hover { border-color: var(--border-h); }
+
+.kpr-biaya-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 22px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(201,168,76,.04);
+}
+.kpr-biaya-title {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.kpr-biaya-title i { color: var(--gold); }
+.kpr-biaya-sum {
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  color: var(--gold);
+}
+.kpr-biaya-chevron {
+  font-size: 14px;
+  color: var(--text-3);
+  transition: transform .25s var(--ease);
+}
+.kpr-biaya-header.open .kpr-biaya-chevron { transform: rotate(180deg); }
+
+.kpr-biaya-body { padding: 4px 22px 18px; }
+
+.kpr-biaya-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+@media (max-width: 767px) {
+  .kpr-biaya-grid { grid-template-columns: 1fr; }
+}
+
+.kpr-biaya-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  font-size: 12.5px;
+  font-family: "Poppins", sans-serif;
+  gap: 12px;
+}
+.kpr-biaya-grid .kpr-biaya-row:nth-child(odd)  { padding-right: 20px; }
+.kpr-biaya-grid .kpr-biaya-row:nth-child(even) { padding-left: 20px; border-left: 1px solid rgba(255,255,255,.05); }
+@media (max-width: 767px) {
+  .kpr-biaya-grid .kpr-biaya-row:nth-child(odd)  { padding-right: 0; }
+  .kpr-biaya-grid .kpr-biaya-row:nth-child(even) { padding-left: 0; border-left: none; }
+}
+.kpr-biaya-row span { color: var(--text-2); }
+.kpr-biaya-row strong { color: var(--text-1); white-space: nowrap; }
+
+.kpr-ppn-row { display: flex; }
+
+.kpr-biaya-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  font-size: 13.5px;
+  font-family: "Poppins", sans-serif;
+}
+.kpr-biaya-total-row > span {
+  font-weight: 700;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kpr-biaya-total-row > span i { color: var(--gold); }
+.kpr-biaya-total-row > strong {
+  font-size: 15px;
+  font-weight: 800;
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.kpr-biaya-note {
+  font-size: 11px;
+  color: var(--text-3);
+  font-style: italic;
+  font-family: "Poppins", sans-serif;
+  margin: 10px 0 0;
+  line-height: 1.6;
 }

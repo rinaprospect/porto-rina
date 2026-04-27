@@ -136,10 +136,42 @@
       el.style.setProperty('--fill', pct + '%');
     }
 
+    function hitungAfford(cicilan) {
+      const incomeEl  = document.getElementById('kpr-income');
+      const minEl     = document.getElementById('kpr-income-min');
+      const affordEl  = document.getElementById('kpr-afford');
+      const minIncome = cicilan > 0 ? cicilan / 0.3 : 0;
+
+      if (minEl) minEl.textContent = cicilan > 0 ? fmt(minIncome) : 'Rp \u2014';
+      if (!incomeEl || !affordEl) return;
+
+      const income = parseInt((incomeEl.value || '').replace(/\D/g, ''), 10) || 0;
+      if (income <= 0) { affordEl.style.display = 'none'; return; }
+
+      affordEl.style.display = 'block';
+      const pct   = cicilan / income * 100;
+      const barEl = document.getElementById('kpr-afford-bar');
+      const pctEl = document.getElementById('kpr-afford-pct');
+      const badge = document.getElementById('kpr-afford-badge');
+
+      if (barEl) {
+        barEl.style.width = Math.min(pct, 100).toFixed(1) + '%';
+        barEl.className = 'kpr-afford-bar' + (pct > 40 ? ' over' : pct > 30 ? ' warn' : '');
+      }
+      if (pctEl) pctEl.textContent = pct.toFixed(1) + '%';
+      if (badge) {
+        if (pct <= 30)      { badge.textContent = 'Aman';  badge.className = 'kpr-afford-badge'; }
+        else if (pct <= 40) { badge.textContent = 'Batas'; badge.className = 'kpr-afford-badge warn'; }
+        else                { badge.textContent = 'Berat'; badge.className = 'kpr-afford-badge over'; }
+      }
+    }
+
     function hitung() {
       const harga   = parseHarga();
-      const dpPct   = parseFloat(dpEl.value) / 100;
-      const bungaPA = parseFloat(bungaEl.value) / 100;
+      const dpInput = document.getElementById('dp-val');
+      const bInput  = document.getElementById('bunga-val');
+      const dpPct   = (parseFloat(dpInput ? dpInput.value : dpEl.value) || 0) / 100;
+      const bungaPA = (parseFloat(bInput  ? bInput.value  : bungaEl.value) || 0) / 100;
       const n       = tenor * 12;
       const r       = bungaPA / 12;
       const dpAmt   = harga * dpPct;
@@ -149,11 +181,13 @@
       if (r > 0 && pokok > 0 && n > 0) {
         const rn = Math.pow(1 + r, n);
         cicilan = pokok * (r * rn) / (rn - 1);
+      } else if (r === 0 && pokok > 0 && n > 0) {
+        cicilan = pokok / n;
       }
 
       const totalBayar  = cicilan * n;
       const totalBunga  = totalBayar - pokok;
-      const pPct        = totalBayar > 0 ? (pokok / totalBayar * 100) : 50;
+      const pPct        = totalBayar > 0 ? (pokok / totalBayar * 100) : 100;
       const bPct        = 100 - pPct;
 
       const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -169,6 +203,8 @@
       const barB = document.getElementById('kpr-bar-b');
       if (barP) barP.style.width = pPct.toFixed(1) + '%';
       if (barB) barB.style.width = bPct.toFixed(1) + '%';
+
+      hitungAfford(cicilan);
     }
 
     /* Format harga input */
@@ -179,21 +215,43 @@
       hitung();
     });
 
-    /* DP slider */
+    /* DP slider → sync ke input manual */
     dpEl.addEventListener('input', function () {
-      const badge = document.getElementById('dp-val');
-      if (badge) badge.textContent = this.value + '%';
+      const inp = document.getElementById('dp-val');
+      if (inp) inp.value = parseInt(this.value, 10);
       setSliderFill(this);
       hitung();
     });
 
-    /* Bunga slider */
+    /* DP input manual → sync ke slider */
+    const dpValEl = document.getElementById('dp-val');
+    if (dpValEl) {
+      dpValEl.addEventListener('input', function () {
+        const v = Math.min(90, Math.max(0, parseFloat(this.value) || 0));
+        dpEl.value = v;
+        setSliderFill(dpEl);
+        hitung();
+      });
+    }
+
+    /* Bunga slider → sync ke input manual */
     bungaEl.addEventListener('input', function () {
-      const badge = document.getElementById('bunga-val');
-      if (badge) badge.textContent = parseFloat(this.value).toFixed(1) + '%';
+      const inp = document.getElementById('bunga-val');
+      if (inp) inp.value = parseFloat(this.value).toFixed(1);
       setSliderFill(this);
       hitung();
     });
+
+    /* Bunga input manual → sync ke slider */
+    const bungaValEl = document.getElementById('bunga-val');
+    if (bungaValEl) {
+      bungaValEl.addEventListener('input', function () {
+        const v = Math.min(20, Math.max(0, parseFloat(this.value) || 0));
+        bungaEl.value = v;
+        setSliderFill(bungaEl);
+        hitung();
+      });
+    }
 
     /* Tenor buttons */
     document.querySelectorAll('.kpr-tenor').forEach(function (btn) {
@@ -204,6 +262,17 @@
         hitung();
       });
     });
+
+    /* Format penghasilan input */
+    const incomeEl = document.getElementById('kpr-income');
+    if (incomeEl) {
+      incomeEl.addEventListener('input', function () {
+        const raw = this.value.replace(/\D/g, '');
+        const num = parseInt(raw, 10);
+        this.value = num > 0 ? num.toLocaleString('id-ID') : '';
+        hitung();
+      });
+    }
 
     /* Init */
     hargaEl.value = (500000000).toLocaleString('id-ID');
